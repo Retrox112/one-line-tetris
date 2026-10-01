@@ -1,79 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>One Line Tertis</title>
-    <style>
-      * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  user-select: none;
-}
-
-body {
-  background-color: #000;
-  color: #fff;
-  font-family: 'Courier New', Courier, monospace;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.game {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 24px;
-}
-
-.box {
-  border: 2px solid #fff;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.value {
-  font-size: 20px;
-  font-weight: bold;
-  width: 100%;
-  text-align: center;
-  margin-bottom: 4px;
-}
-
-.board-container {
-  position: relative;
-  border: 2px solid #fff;
-}
-
-#board {
-  background-color: #000;
-  display: block;
-}
-    </style>>
-  </head>
-  <body>
-    <div class="game">
-      <div class="box">
-        <h2>One Line Tetris</h2>
-        <div>Score</div>
-       <div class="value">0</div>
-      </div>
-      <div class="board-container">
-      <canvas id="board" width="300" height="600"></canvas>
-    </div>
-    <script>
-      const C = document.getElementById('board'), X = C.getContext('2d'), S = document.querySelector('.value');
+const C = document.getElementById('board'), X = C.getContext('2d'), S = document.querySelector('.value');
 const W = 10, H = 20, Z = 30;
 const B = Array.from({ length: H }, () => Array(W).fill(0));
 let s = 0, d = 0, t = 0, A, p;
 
+// sound gen func
 const snd = (f, u = 0.08, l = 0) => {
   if (!A) A = new (window.AudioContext || window.webkitAudioContext)();
   const T = A.currentTime + l, o = A.createOscillator(), g = A.createGain();
@@ -82,6 +12,7 @@ const snd = (f, u = 0.08, l = 0) => {
   o.connect(g); g.connect(A.destination); o.start(T); o.stop(T + u);
 };
 
+// shape def
 const P = [
   [[1,1,1,1]], 
   [[1,0,0],[1,1,1]], 
@@ -92,9 +23,11 @@ const P = [
   [[1,1,0],[0,1,1]]
 ];
 
+//rand shape gen
 const cP = () => { const m = P[Math.random() * 7 | 0]; return { m, x: (W - m[0].length) / 2 | 0, y: 0 }; };
 p = cP();
 
+// draw shape func
 const dM = (m, o) => m.forEach((r, y) => r.forEach((v, x) => {
   if (v) {
     X.fillStyle = '#fff'; X.fillRect((x + o.x) * Z, (y + o.y) * Z, Z, Z);
@@ -103,8 +36,10 @@ const dM = (m, o) => m.forEach((r, y) => r.forEach((v, x) => {
   }
 }));
 
+// collision detect
 const col = k => k.m.some((r, y) => r.some((v, x) => v && (B[y + k.y]?.[x + k.x] !== 0)));
 
+// drop fun
 function drp() {
   p.y++;
   if (col(p)) {
@@ -127,6 +62,7 @@ function drp() {
   d = 0;
 }
 
+// main game func
 function up(tm = 0) {
   if ((d += tm - t) > 800) drp();
   t = tm;
@@ -136,6 +72,7 @@ function up(tm = 0) {
   requestAnimationFrame(up);
 }
 
+// input an stuff
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') { p.x--; col(p) ? p.x++ : snd(120, 0.04); }
   if (e.key === 'ArrowRight') { p.x++; col(p) ? p.x-- : snd(120, 0.04); }
@@ -148,6 +85,3 @@ document.addEventListener('keydown', e => {
 });
 
 up();
-    </script>
-  </body>
-</html>
