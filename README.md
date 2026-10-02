@@ -14,6 +14,8 @@ the keymap is not in the website cause i just cant put it in without passing the
 
 i managed to integrate sounds using sine waves, and i do not wanna js for at-least a few days after this.
 
+the full version is at: https://retrox112.github.io/Tetris/
+
 AI Disclosure: AI was used in the js part cause i could not figure out this language, i still dont know how my code works, and i did use AI to shorthand the variable and function names for me cause i was too exhausted to do it myself by the end of it. thanks for aknowledging this.
 
 i hope you enjoy this game i made, and do play it whenever you may want. thanks.
